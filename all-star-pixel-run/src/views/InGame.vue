@@ -3,7 +3,7 @@
     <div class="sideBar">
       <div class="leaderBoard">
         <h3>
-          <i class="fas fa-trophy"></i>Leader Board
+          <i class="fas fa-trophy"></i>Player List
         </h3>
         <div class="score">
           <ul>
@@ -17,14 +17,14 @@
       </div>
       <div class="suitDiv">
         <div class="top">
-          <div class="circle circle1"></div>
+          <div class="circle circle1" v-on:click="choose('batu')"></div>
         </div>
         <div class="bottom">
           <div class="left">
-            <div class="circle circle2"></div>
+            <div class="circle circle2" v-on:click="choose('gunting')"></div>
           </div>
           <div class="right">
-            <div class="circle circle3"></div>
+            <div class="circle circle3" v-on:click="choose('kertas')"></div>
           </div>
         </div>
       </div>
@@ -32,7 +32,36 @@
     <div class="board">
       <div class="boardDiv">
         <div v-for="(number, i) in numbers" v-bind:key="i">
-          <div v-bind:class="(!hidden.includes(number))?'block':'block hidden'">
+          <div v-bind:class="(!hidden.includes(number))?'block img':'block hidden img'">
+            <div class="top2">
+              <div class="left">
+                <div v-if="step[0] == number">
+                  <img src="../assets/p1.gif" alt />
+                </div>
+              </div>
+              <div class="right">
+                <div v-if="step[1] == number">
+                  <img src="../assets/p2.gif" alt />
+                </div>
+              </div>
+            </div>
+            <div class="mid2">
+              <div v-if="step[2] == number">
+                <img src="../assets/p3.gif" alt />
+              </div>
+            </div>
+            <div class="bottom2">
+              <div class="left">
+                <div v-if="step[3] == number">
+                  <img src="../assets/p4.gif" alt />
+                </div>
+              </div>
+              <div class="right">
+                <div v-if="step[4] == number">
+                  <img src="../assets/p5.gif" alt />
+                </div>
+              </div>
+            </div>
             <div v-if="left.includes(number)" class="center">
               <i class="fas fa-chevron-left"></i>
               <i class="fas fa-chevron-left"></i>
@@ -87,7 +116,12 @@ export default {
       right: [30, 29, 22, 21, 14],
       top: [28, 20, 13, 7],
       timeTitle: null,
-      time: null
+      time: null,
+      rute: [30, 29, 28, 22, 21, 20, 14, 13, 7, 1, 2, 3, 4, 5, 6],
+      step: [30, 30, 30, 30, 30],
+      nextSuit: null,
+      score: null,
+      win: null
     };
   },
   methods: {
@@ -99,7 +133,7 @@ export default {
     },
     setReadyTime() {
       this.timeTitle = "Start";
-      this.time = 59;
+      this.time = 2;
     },
     countDown() {
       if (this.time > 0) {
@@ -117,9 +151,64 @@ export default {
           this.time = 5;
           this.countDown();
         } else {
-          //main di sini nih zul
+          this.suit();
+          this.turn(this.score);
+          this.timeTitle = "Loading";
+          this.time = 5;
+          this.countDown();
         }
       }
+    },
+    move(i, a, b) {
+      if (a < b && a < this.rute.length) {
+        setTimeout(() => {
+          a += 1;
+          this.step[i] = this.rute[a];
+          this.step = [...this.step];
+          this.move(i, a, b);
+        }, 500);
+      } else {
+        if (a == this.rute.length) {
+          this.win = `Player ke-${i + 1}`;
+        }
+      }
+    },
+    turn(steps) {
+      this.step.forEach((el, i) => {
+        let awal = this.rute.indexOf(el);
+        let akhir = awal + steps[i];
+        this.move(i, awal, akhir);
+      });
+    },
+    choose(str) {
+      this.nextSuit = str;
+    },
+    suit() {
+      const arr = ["batu", "kertas", "gunting"];
+      const suits = [
+        this.nextSuit,
+        arr[Math.round(Math.random() * 2)],
+        arr[Math.round(Math.random() * 2)],
+        arr[Math.round(Math.random() * 2)],
+        arr[Math.round(Math.random() * 2)]
+      ];
+      const batu = suits.filter(el => el.toLowerCase() == "batu").length;
+      const kertas = suits.filter(el => el.toLowerCase() == "kertas").length;
+      const gunting = suits.filter(el => el.toLowerCase() == "gunting").length;
+
+      this.score = [];
+      suits.forEach(el => {
+        switch (el) {
+          case "batu":
+            this.score.push(gunting * 3);
+            break;
+          case "kertas":
+            this.score.push(batu * 2);
+            break;
+          case "gunting":
+            this.score.push(kertas * 1);
+        }
+      });
     }
   },
   created() {
@@ -364,12 +453,15 @@ export default {
   font-family: "Press Start 2P", cursive;
   color: white;
   margin-top: 30px;
+  text-align: center;
 }
 .suitDiv2 {
   position: relative;
   color: white;
   font-family: "Press Start 2P", cursive;
   font-size: 12px;
+  text-align: center;
+  margin: 25px 0px;
 }
 .suitDiv2 img {
   position: relative;
@@ -377,6 +469,7 @@ export default {
   width: 50px;
   height: 50px;
   top: 15px;
+  margin-top: -30px;
 }
 .timeDiv {
   position: absolute;
@@ -402,5 +495,41 @@ export default {
   color: white;
   font-family: "Press Start 2P", cursive;
   font-size: 15px;
+}
+.top2 {
+  position: relative;
+  width: 100%;
+  height: 33%;
+}
+.mid2 {
+  position: relative;
+  width: 100%;
+  height: 33%;
+}
+.mid2 img {
+  position: relative;
+  left: 25%;
+  top: 0%;
+  -moz-transform: scale(-1, -1);
+  -o-transform: scale(-1, -1);
+  -webkit-transform: scale(-1, -1);
+  transform: scale(-1, 1);
+}
+.bottom2 {
+  position: relative;
+  width: 100%;
+  height: 33%;
+}
+.bottom2 .right img {
+  margin-top: -60px;
+  margin-left: -20px;
+  width: 120px;
+  height: 120px;
+}
+.img img {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  margin-top: -20px;
 }
 </style>
