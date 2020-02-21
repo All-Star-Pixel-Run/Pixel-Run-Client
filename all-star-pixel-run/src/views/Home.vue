@@ -36,7 +36,9 @@ export default {
   methods: {
     startGame () {
       this.start = true
+      this.$store.commit('PLAY_BATS')
       setTimeout(() => { 
+        this.$store.commit('PAUSE_BATS')
         this.$router.push('/start')
         }, 1500);
     }
@@ -102,6 +104,7 @@ export default {
   animation: 3s ease-out 0s 1 slideInFromLeft;
 }
 #forChara {
+  padding-top: 1%;
   display: flex;
   flex-direction: column;
   justify-content: end;

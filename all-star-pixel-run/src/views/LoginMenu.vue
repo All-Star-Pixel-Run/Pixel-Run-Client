@@ -1,6 +1,6 @@
 <template>
   <div class="startPart">
-      <div class="top">
+      <div class="top pt-5">
           <img id="host" src="../assets/host.png" alt="">
       </div>
       <div class="bottom">
@@ -33,6 +33,9 @@ export default {
         this.$store.commit('SET_USERNAME', this.userName)
         this.$router.push('/roomSelection')
     }
+  },
+  created () {
+    this.$store.commit('PLAY_MENU')
   }
 }
 </script>

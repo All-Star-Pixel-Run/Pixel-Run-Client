@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import LoginMenu from '../views/LoginMenu.vue'
 import RoomSelection from '../views/RoomSelection.vue'
+import WaitingRoom from '../views/WaitingRoom.vue'
+import Play from '../views/Play.vue'
 
 Vue.use(VueRouter)
 
@@ -11,6 +13,16 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/play',
+    name: 'Play',
+    component: Play
+  },
+  {
+    path: '/loading',
+    name: 'Loading',
+    component: WaitingRoom
   },
   {
     path: '/roomSelection',

@@ -46,6 +46,7 @@ export default {
 }
 .forRooms {
     overflow: scroll;
+    animation: 1s ease-out 0s 1 fadeIn;
 }
 .introduction {
     font-family: 'Squada One', cursive;

@@ -2,7 +2,7 @@
   <b-col cols="2" class="room m-2">
       <div class="cardContent">
           <h3>ROOM NAME</h3>
-          <button>Select</button>
+          <button class="selectRoomButton" @click="$router.push('/loading')">Select</button>
       </div>
   </b-col>
 </template>
@@ -14,6 +14,13 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css?family=Squada+One&display=swap');
+.selectRoomButton {
+    font-family: 'Squada One', cursive;
+    border-radius: 10px;
+    height: 5vh;
+    width: 5vw;
+}
 .room {
   height: 15vh;
   background-image: url('../assets/roomBox.png');
@@ -25,6 +32,9 @@ export default {
 .cardContent {
     height: 100%;
     width: 100%;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 </style>
