@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="Win"></div>
     <div class="sideBar">
       <div class="leaderBoard">
         <h3>
@@ -9,7 +10,11 @@
           <ul>
             <li v-for="(playerName, i) in playerNames" :key="i" style="display:flex;">
               {{playerName}}
-              <img :id="`pic${i+1}`" class="playerSprites" :src="require(`../assets/p${i+1}.gif`)">
+              <img
+                :id="`pic${i+1}`"
+                class="playerSprites"
+                :src="require(`../assets/p${i+1}.gif`)"
+              />
             </li>
           </ul>
         </div>
@@ -119,6 +124,7 @@ export default {
       rute: [30, 29, 28, 22, 21, 20, 14, 13, 7, 1, 2, 3, 4, 5, 6],
       step: [30, 30, 30, 30, 30],
       nextSuit: null,
+      nextSuits: null,
       score: null,
       win: null,
       playerNames: null
@@ -133,7 +139,7 @@ export default {
     },
     setReadyTime() {
       this.timeTitle = "Start";
-      this.time = 2;
+      this.time = 20;
     },
     countDown() {
       if (this.time > 0) {
@@ -151,12 +157,12 @@ export default {
           this.time = 5;
           this.countDown();
         } else {
-          // this.suit();
-          // this.turn(this.score);
-          // this.timeTitle = "Loading";
-          // this.time = 5;
-          // this.countDown();
-
+          this.$socket.emit("showResult");
+          this.suit();
+          this.turn(this.score);
+          this.timeTitle = "Loading";
+          this.time = 5;
+          this.countDown();
         }
       }
     },
@@ -182,23 +188,24 @@ export default {
       });
     },
     choose(str) {
-      this.nextSuit = str;
+      if (!str) {
+        const arr = ["batu", "kertas", "gunting"];
+        this.nextSuits = arr[Math.round(Math.random() * 2)];
+      } else {
+        this.nextSuit = str;
+      }
+      this.$socket.emit("sendSuit", this.nextSuit);
     },
     suit() {
-      const arr = ["batu", "kertas", "gunting"];
-      // const suits = [
-      //   this.nextSuit,
-      //   arr[Math.round(Math.random() * 2)],
-      //   arr[Math.round(Math.random() * 2)],
-      //   arr[Math.round(Math.random() * 2)],
-      //   arr[Math.round(Math.random() * 2)]
-      // ];
-      const batu = suits.filter(el => el.toLowerCase() == "batu").length;
-      const kertas = suits.filter(el => el.toLowerCase() == "kertas").length;
-      const gunting = suits.filter(el => el.toLowerCase() == "gunting").length;
+      const batu = this.nextSuits.filter(el => el.toLowerCase() == "batu")
+        .length;
+      const kertas = this.nextSuits.filter(el => el.toLowerCase() == "kertas")
+        .length;
+      const gunting = this.nextSuits.filter(el => el.toLowerCase() == "gunting")
+        .length;
 
       this.score = [];
-      suits.forEach(el => {
+      this.nextSuits.forEach(el => {
         switch (el) {
           case "batu":
             this.score.push(batu * 3);
@@ -213,19 +220,22 @@ export default {
     }
   },
   beforeCreate() {
-    this.$socket.emit('startGame')
+    this.$socket.emit("startGame");
   },
   created() {
     this.addNumber();
     this.setReadyTime();
     this.countDown();
-    this.$store.commit('PAUSE_MENU')
-    this.$store.commit('PLAY_RACE')
+    this.$store.commit("PAUSE_MENU");
+    this.$store.commit("PLAY_RACE");
   },
   mounted() {
-    this.$socket.on('gameStarting', (playerNames) => {
-      this.playerNames = playerNames
-    })
+    this.$socket.on("gameStarting", playerNames => {
+      this.playerNames = playerNames;
+    });
+    this.$socket.on("result", suits => {
+      this.nextSuits = suits;
+    });
   }
 };
 </script>
@@ -549,7 +559,14 @@ export default {
   margin-left: 20%;
 }
 #pic3 {
-  transform: rotateY(180deg)
+  transform: rotateY(180deg);
+}
+.win {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.75);
 }
 </style>
 
