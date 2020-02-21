@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 import LoginMenu from '../views/LoginMenu.vue'
 import RoomSelection from '../views/RoomSelection.vue'
 import WaitingRoom from '../views/WaitingRoom.vue'
-import Play from '../views/Play.vue'
+import InGame from '../views/InGame.vue'
 
 Vue.use(VueRouter)
 
@@ -17,7 +17,7 @@ const routes = [
   {
     path: '/play',
     name: 'Play',
-    component: Play
+    component: InGame
   },
   {
     path: '/loading',
