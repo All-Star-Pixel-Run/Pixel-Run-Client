@@ -7,7 +7,10 @@
         </h3>
         <div class="score">
           <ul>
-            <li v-for="(playerName, i) in playerNames" :key="i">{{playerName}}</li>
+            <li v-for="(playerName, i) in playerNames" :key="i" style="display:flex;">
+              {{playerName}}
+              <img :id="`pic${i+1}`" class="playerSprites" :src="require(`../assets/p${i+1}.gif`)">
+            </li>
           </ul>
         </div>
       </div>
@@ -148,11 +151,12 @@ export default {
           this.time = 5;
           this.countDown();
         } else {
-          this.suit();
-          this.turn(this.score);
-          this.timeTitle = "Loading";
-          this.time = 5;
-          this.countDown();
+          // this.suit();
+          // this.turn(this.score);
+          // this.timeTitle = "Loading";
+          // this.time = 5;
+          // this.countDown();
+
         }
       }
     },
@@ -182,13 +186,13 @@ export default {
     },
     suit() {
       const arr = ["batu", "kertas", "gunting"];
-      const suits = [
-        this.nextSuit,
-        arr[Math.round(Math.random() * 2)],
-        arr[Math.round(Math.random() * 2)],
-        arr[Math.round(Math.random() * 2)],
-        arr[Math.round(Math.random() * 2)]
-      ];
+      // const suits = [
+      //   this.nextSuit,
+      //   arr[Math.round(Math.random() * 2)],
+      //   arr[Math.round(Math.random() * 2)],
+      //   arr[Math.round(Math.random() * 2)],
+      //   arr[Math.round(Math.random() * 2)]
+      // ];
       const batu = suits.filter(el => el.toLowerCase() == "batu").length;
       const kertas = suits.filter(el => el.toLowerCase() == "kertas").length;
       const gunting = suits.filter(el => el.toLowerCase() == "gunting").length;
@@ -197,13 +201,13 @@ export default {
       suits.forEach(el => {
         switch (el) {
           case "batu":
-            this.score.push(gunting * 3);
+            this.score.push(batu * 3);
             break;
           case "kertas":
-            this.score.push(batu * 2);
+            this.score.push(kertas * 2);
             break;
           case "gunting":
-            this.score.push(kertas * 1);
+            this.score.push(gunting * 1);
         }
       });
     }
@@ -538,6 +542,14 @@ export default {
   width: 70px;
   height: 70px;
   margin-top: -20px;
+}
+
+.playerSprites {
+  height: 5vh;
+  margin-left: 20%;
+}
+#pic3 {
+  transform: rotateY(180deg)
 }
 </style>
 
