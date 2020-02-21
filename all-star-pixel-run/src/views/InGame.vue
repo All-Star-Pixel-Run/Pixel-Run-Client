@@ -99,7 +99,7 @@ export default {
     },
     setReadyTime() {
       this.timeTitle = "Start";
-      this.time = 59;
+      this.time = 5;
     },
     countDown() {
       if (this.time > 0) {
