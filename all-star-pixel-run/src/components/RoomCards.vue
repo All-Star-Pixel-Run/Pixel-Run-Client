@@ -1,15 +1,29 @@
 <template>
   <b-col cols="2" class="room m-2">
       <div class="cardContent">
-          <h3>ROOM NAME</h3>
-          <button class="selectRoomButton" @click="$router.push('/loading')">Select</button>
+          <h3>{{roomDetails.name}}</h3>
+          <button class="selectRoomButton" @click="joinRoom(roomDetails.name)">Select</button>
       </div>
   </b-col>
 </template>
 
 <script>
 export default {
-  name: 'RoomCard'
+  name: 'RoomCard',
+  props: {
+    roomDetails: {
+      type: Object
+    }
+  },
+  methods: {
+    joinRoom (roomName) {
+      this.$socket.emit('join', {
+        id: localStorage.getItem('id'),
+        roomId: roomName
+      })
+      this.$router.push(`/loading/${roomName}`)
+    }
+  }
 }
 </script>
 

@@ -7,11 +7,7 @@
         </h3>
         <div class="score">
           <ul>
-            <li>1. Nanda</li>
-            <li>2. Nanda</li>
-            <li>3. Nanda</li>
-            <li>4. Nanda</li>
-            <li>5. Nanda</li>
+            <li v-for="(playerName, i) in playerNames" :key="i">{{playerName}}</li>
           </ul>
         </div>
       </div>
@@ -121,7 +117,8 @@ export default {
       step: [30, 30, 30, 30, 30],
       nextSuit: null,
       score: null,
-      win: null
+      win: null,
+      playerNames: null
     };
   },
   methods: {
@@ -211,15 +208,25 @@ export default {
       });
     }
   },
+  beforeCreate() {
+    this.$socket.emit('startGame')
+  },
   created() {
     this.addNumber();
     this.setReadyTime();
     this.countDown();
+    this.$store.commit('PAUSE_MENU')
+    this.$store.commit('PLAY_RACE')
+  },
+  mounted() {
+    this.$socket.on('gameStarting', (playerNames) => {
+      this.playerNames = playerNames
+    })
   }
 };
 </script>
 
-<style>
+<style scoped>
 @import url("https://fonts.googleapis.com/css?family=Inconsolata:700|Press+Start+2P&display=swap");
 
 .board {

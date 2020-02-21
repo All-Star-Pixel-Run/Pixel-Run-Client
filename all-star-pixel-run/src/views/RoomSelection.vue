@@ -9,12 +9,12 @@
               <p style="margin:0;">Please select a room or create a new one</p>
               <div>
               <input type="text" style="border-radius:17px;padding:1%;margin-right:1%;" v-model="createRoomName">
-              <button style="border-radius:17px;">Create</button>
+              <button style="border-radius:17px;" @click="createRoom">Create</button>
               </div>
           </div>
       </div>
       <b-row align-h="center" cols="5" class="forRooms m-5">
-          <RoomCards></RoomCards>
+          <RoomCards v-for="(room, i) in $store.state.roomList" :key="i" :roomDetails="room"></RoomCards>
       </b-row>
   </div>
 </template>
@@ -30,6 +30,25 @@ export default {
   },
   components: {
     RoomCards
+  },
+  methods: {
+    createRoom () {
+        this.$store.dispatch('createRoom', {
+            roomName: this.createRoomName
+        })
+        this.$socket.emit('create', {
+        id: localStorage.getItem('id'),
+        roomName: this.createRoomName
+      })
+    }
+  },
+  created () {
+    this.$store.dispatch('getAllRoom')
+  },
+  mounted () {
+    this.$socket.on('roomUpdated', () => {
+        this.$store.dispatch('getAllRoom')
+    })
   }
 }
 </script>
