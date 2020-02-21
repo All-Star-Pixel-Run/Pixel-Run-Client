@@ -12,7 +12,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: InGame
+    component: Home
   },
   {
     path: '/play',
