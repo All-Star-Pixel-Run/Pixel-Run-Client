@@ -30,8 +30,10 @@ export default {
   },
   methods: {
     continueToNext () {
+        this.$socket.emit('join', this.userName)
+        this.$store.dispatch('createUser', {userName: this.userName})
         this.$store.commit('SET_USERNAME', this.userName)
-        this.$router.push('/roomSelection')
+        this.$router.push('/loading')
     }
   },
   created () {

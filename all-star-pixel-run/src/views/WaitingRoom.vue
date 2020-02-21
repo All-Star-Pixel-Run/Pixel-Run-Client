@@ -3,7 +3,6 @@
       <div class="loadingPart">
           <img src="../assets/loading.gif" alt="loading">
           <h1 id="waiting">Waiting for other players: {{players}}/5</h1>
-          <button @click="tambah">test</button>
       </div>
   </div>
 </template>
@@ -14,21 +13,20 @@ export default {
   name: 'WaitingRoom',
   data () {
     return {
-        players: 1
+      players: 0
     }
-  },
-  methods: {
-      tambah () {
-        this.players++
-      }
   },
   watch: {
     players:  (val) => {
-        // this.$router.push('/play')
       if(val == 5) {
         router.push('/play')
       }
     }
+  },
+  mounted () {
+    this.$socket.on('playerJoin', (joined) => {
+      this.players = joined
+    })
   }
 }
 </script>
